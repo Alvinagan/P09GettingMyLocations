@@ -18,6 +18,10 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+
 public class MainActivity extends AppCompatActivity {
 
     Button btnStart, btnStop, btnCheck;
@@ -79,6 +83,30 @@ public class MainActivity extends AppCompatActivity {
         btnCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                String folderLocation = getFilesDir().getAbsolutePath() + "/P09";
+                File targetFile = new File(folderLocation, "location.txt");
+                if (targetFile.exists() == true) {
+                    String data = "";
+                    try {
+                        FileReader reader = new FileReader(targetFile);
+                        BufferedReader br = new BufferedReader(reader);
+                        String line = br.readLine();
+                        while (line != null) {
+                            data += line + "\n";
+                            line = br.readLine();
+                        }
+                        br.close();
+                        reader.close();
+                    } catch (Exception e) {
+                        Toast.makeText(MainActivity.this, "Failed to read!", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+
+                    tvLatitude.setText(data);
+                    tvLongtitude.setText(data);
+                }
+
 
             }
         });
